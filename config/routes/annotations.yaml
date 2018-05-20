@@ -1,0 +1,4 @@
+controllers:
+    resource: ../../src/Application/Action/
+    type: annotation
+    prefix: api

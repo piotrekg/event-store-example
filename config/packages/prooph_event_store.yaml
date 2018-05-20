@@ -1,0 +1,38 @@
+prooph_event_store:
+    stores:
+        product_store:
+            event_store: Prooph\EventStore\Pdo\MariaDbEventStore
+            repositories:
+                product_collection:
+                    repository_class: Infrastructure\Product\EventStoreProductRepository
+                    aggregate_type: Domain\Product\Product
+                    aggregate_translator: prooph_event_sourcing.aggregate_translator
+
+    projection_managers:
+        product_projection_manager:
+            event_store: Prooph\EventStore\Pdo\MariaDbEventStore
+            connection: 'doctrine.pdo.connection'
+            projections:
+                product_projection:
+                    read_model: Infrastructure\Product\Projection\ProductReadModel
+                    projection: Infrastructure\Product\Projection\ProductProjection
+
+services:
+    Prooph\EventStore\Pdo\MariaDbEventStore:
+        arguments:
+            - '@prooph_event_store.message_factory'
+            - '@doctrine.pdo.connection'
+            - '@prooph_event_store.single_stream_strategy'
+
+    doctrine.pdo.connection:
+        class: PDO
+        factory: ['@database_connection', getWrappedConnection]
+
+    Infrastructure\Product\Repository\EventStoreProductRepository: ~
+
+    prooph_event_store.single_stream_strategy:
+        class: Prooph\EventStore\Pdo\PersistenceStrategy\MariaDbSingleStreamStrategy
+
+#    Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator: ~
+    prooph_event_sourcing.aggregate_translator:
+        class: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
