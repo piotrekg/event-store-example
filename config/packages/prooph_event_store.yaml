@@ -16,4 +16,3 @@ prooph_event_store:
                 product_projection:
                     read_model: Infrastructure\Product\Projection\ProductReadModel
                     projection: Infrastructure\Product\Projection\ProductProjection
-

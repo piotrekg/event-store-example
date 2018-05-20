@@ -1,4 +1,11 @@
 services:
+    Prooph\EventStore\Projection\ProjectionManager:
+        class: Prooph\EventStore\Pdo\Projection\MariaDbProjectionManager
+        public: true
+        arguments:
+            - '@Prooph\EventStore\EventStore'
+            - '@Doctrine\DBAL\Driver\Connection'
+
     Prooph\EventStoreBusBridge\EventPublisher:
         arguments: ['@prooph_service_bus.product_event_bus']
         public: true
