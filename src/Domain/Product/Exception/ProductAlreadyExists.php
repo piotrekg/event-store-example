@@ -11,7 +11,7 @@ class ProductAlreadyExists extends \InvalidArgumentException
     public static function withProductId(ProductId $productId): self
     {
         return new self(sprintf(
-            'Product with id %s cannot be found.',
+            'Product with id "%s" allready exists!',
             $productId->toString()
         ));
     }

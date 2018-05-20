@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Domain\Product;
 
 use Domain\Product\Event\ProductWasCreated;
+use Domain\ValueObject;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
 
-class Product extends AggregateRoot
+class Product extends AggregateRoot implements ValueObject
 {
     /**
      * @var ProductId
@@ -53,6 +54,14 @@ class Product extends AggregateRoot
     public function price(): ProductPrice
     {
         return $this->price;
+    }
+
+    public function equals(ValueObject $other): bool
+    {
+        return $this->productId()->equals($other->productId())
+            && $this->name()->equals($other->name())
+            && $this->price()->equals($other->price())
+        ;
     }
 
     /**
