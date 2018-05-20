@@ -37,6 +37,6 @@ final class GetProductAction
             throw new ProductNotFoundException($productId);
         }
 
-        return JsonResponse::create($product, Response::HTTP_CREATED);
+        return JsonResponse::create($product, Response::HTTP_OK);
     }
 }
