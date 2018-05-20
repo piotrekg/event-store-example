@@ -24,6 +24,14 @@ services:
             - '@doctrine.pdo.connection'
             - '@prooph_event_store.single_stream_strategy'
 
+    #
+    PDO:
+        alias: doctrine.pdo.connection
+
+    Prooph\EventStore\Pdo\PersistenceStrategy:
+        alias: prooph_event_store.single_stream_strategy
+    #
+
     doctrine.pdo.connection:
         class: PDO
         factory: ['@database_connection', getWrappedConnection]

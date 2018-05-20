@@ -40,6 +40,7 @@ services:
 
     Prooph\EventStore\EventStore:
         class: Prooph\EventStore\Pdo\MariaDbEventStore
+        public: true
 
 
     Domain\Product\Handler\CreateNewProductHandler:

@@ -20,8 +20,10 @@
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.1",
         "symfony/lts": "^4@dev",
+        "symfony/psr-http-message-bridge": "^1.0",
         "symfony/var-dumper": "^4.1",
-        "symfony/yaml": "^4.1"
+        "symfony/yaml": "^4.1",
+        "zendframework/zend-diactoros": "^1.7"
     },
     "require-dev": {
         "roave/security-advisories": "dev-master",

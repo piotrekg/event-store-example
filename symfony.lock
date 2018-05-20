@@ -182,9 +182,6 @@
     "symfony/lts": {
         "version": "4-dev"
     },
-    "symfony/orm-pack": {
-        "version": "v1.0.5"
-    },
     "symfony/phpunit-bridge": {
         "version": "3.3",
         "recipe": {
@@ -205,6 +202,9 @@
     },
     "symfony/profiler-pack": {
         "version": "v1.0.3"
+    },
+    "symfony/psr-http-message-bridge": {
+        "version": "v1.0.2"
     },
     "symfony/routing": {
         "version": "4.0",
@@ -247,5 +247,8 @@
     },
     "twig/twig": {
         "version": "v2.4.8"
+    },
+    "zendframework/zend-diactoros": {
+        "version": "1.7.1"
     }
 }
