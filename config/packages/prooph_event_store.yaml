@@ -6,41 +6,14 @@ prooph_event_store:
                 product_collection:
                     repository_class: Infrastructure\Product\EventStoreProductRepository
                     aggregate_type: Domain\Product\Product
-                    aggregate_translator: prooph_event_sourcing.aggregate_translator
+                    aggregate_translator: Prooph\EventSourcing\EventStoreIntegration\EventStoreAggregateTranslator
 
     projection_managers:
         product_projection_manager:
             event_store: Prooph\EventStore\Pdo\MariaDbEventStore
-            connection: 'doctrine.pdo.connection'
+            connection: Doctrine\DBAL\Driver\Connection
             projections:
                 product_projection:
                     read_model: Infrastructure\Product\Projection\ProductReadModel
                     projection: Infrastructure\Product\Projection\ProductProjection
 
-services:
-    Prooph\EventStore\Pdo\MariaDbEventStore:
-        arguments:
-            - '@prooph_event_store.message_factory'
-            - '@doctrine.pdo.connection'
-            - '@prooph_event_store.single_stream_strategy'
-
-    #
-    PDO:
-        alias: doctrine.pdo.connection
-
-    Prooph\EventStore\Pdo\PersistenceStrategy:
-        alias: prooph_event_store.single_stream_strategy
-    #
-
-    doctrine.pdo.connection:
-        class: PDO
-        factory: ['@database_connection', getWrappedConnection]
-
-    Infrastructure\Product\Repository\EventStoreProductRepository: ~
-
-    prooph_event_store.single_stream_strategy:
-        class: Prooph\EventStore\Pdo\PersistenceStrategy\MariaDbSingleStreamStrategy
-
-#    Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator: ~
-    prooph_event_sourcing.aggregate_translator:
-        class: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator

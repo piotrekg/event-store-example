@@ -1,0 +1,11 @@
+services:
+    # Product
+    Infrastructure\Product\Repository\EventStoreProductRepository: ~
+
+    Infrastructure\Product\Projection\ProductProjection: ~
+
+    Infrastructure\Product\Projection\ProductFinder:
+        arguments: ['@Doctrine\DBAL\Driver\Connection']
+
+    Infrastructure\Product\Projection\ProductReadModel:
+        arguments: ['@doctrine.dbal.default_connection']

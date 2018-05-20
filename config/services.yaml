@@ -22,35 +22,6 @@ services:
         arguments: ['@prooph_service_bus.product_command_bus']
         tags: ['controller.service_arguments']
 
-    prooph_event_store_bus_bridge.product_event_publisher:
-        class: Prooph\EventStoreBusBridge\EventPublisher
-        arguments: ['@prooph_service_bus.product_event_bus']
-        public: true
-        tags:
-          - { name: 'prooph_event_store.product_store.plugin' }
-
-    prooph_event_store.single_stream_strategy:
-        class: Prooph\EventStore\Pdo\PersistenceStrategy\MariaDbSingleStreamStrategy
-
-
-    prooph_event_sourcing.aggregate_translator:
-        class: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
-
-    Prooph\EventSourcing\Aggregate\AggregateTranslator: ~
-
-    Prooph\EventStore\EventStore:
-        class: Prooph\EventStore\Pdo\MariaDbEventStore
-        public: true
-
-
-    Domain\Product\Handler\CreateNewProductHandler:
-        arguments: ['@product_collection']
-        public: true
-        tags:
-            - { name: 'prooph_service_bus.product_command_bus.route_target', message_detection: true }
-
-    Infrastructure\Product\Projection\ProductFinder: ~
-    Infrastructure\Product\Projection\ProductProjection: ~
-    Infrastructure\Product\Projection\ProductReadModel:
-        arguments: ['@doctrine.dbal.default_connection']
-
+    Doctrine\DBAL\Driver\Connection:
+        class: Doctrine\DBAL\Driver\PDOConnection
+        factory: ['@database_connection', getWrappedConnection]

@@ -18,7 +18,6 @@ class ProductFinder
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
-        $this->connection->setFetchMode(\PDO::FETCH_OBJ);
     }
 
     public function findAll(): array
@@ -32,7 +31,7 @@ class ProductFinder
         $stmt->bindValue('product_id', $productId->toString());
         $stmt->execute();
 
-        $result = $stmt->fetch();
+        $result = $stmt->fetch(\PDO::FETCH_OBJ);
 
         if (false === $result) {
             return null;

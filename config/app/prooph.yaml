@@ -1,0 +1,25 @@
+services:
+    Prooph\EventStoreBusBridge\EventPublisher:
+        arguments: ['@prooph_service_bus.product_event_bus']
+        public: true
+        tags:
+          - { name: 'prooph_event_store.product_store.plugin' }
+
+    Prooph\EventSourcing\Aggregate\AggregateTranslator:
+        class: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
+
+    Prooph\EventStore\EventStore:
+        class: Prooph\EventStore\Pdo\MariaDbEventStore
+        public: true
+
+    Prooph\EventStore\Pdo\PersistenceStrategy:
+            class: Prooph\EventStore\Pdo\PersistenceStrategy\MariaDbSingleStreamStrategy
+
+    Prooph\EventSourcing\EventStoreIntegration\EventStoreAggregateTranslator:
+        class: Prooph\EventSourcing\EventStoreIntegration\AggregateTranslator
+
+    Prooph\EventStore\Pdo\MariaDbEventStore:
+        arguments:
+            - '@Prooph\Common\Messaging\MessageFactory'
+            - '@Doctrine\DBAL\Driver\Connection'
+            - '@Prooph\EventStore\Pdo\PersistenceStrategy'
