@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Application\Helper;
-
 
 use Prooph\EventStore\Http\Middleware\UrlHelper;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
