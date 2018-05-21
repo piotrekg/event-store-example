@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Domain\Product;
 
 use Domain\Product\Event\IncreaseProductStack;
-use Domain\Product\Event\ProductWasAdded;
 use Domain\Product\Event\ProductWasCreated;
 use Domain\Product\Event\DecreaseProductStack;
 use Domain\Product\Exception\ProductOutOfStack;
@@ -60,7 +59,7 @@ final class Product extends AggregateRoot implements ValueObject
         if (false === $this->stack()->inStack()) {
             throw ProductOutOfStack::withProductId($this->productId());
         }
-        
+
         $this->recordThat(DecreaseProductStack::decrease(
             $this->productId(),
             $this->stack(),

@@ -6,7 +6,6 @@ namespace Domain\Product;
 
 use Assert\Assertion;
 use Assert\AssertionFailedException;
-use Domain\Product\Exception\InvalidProductName;
 use Domain\Product\Exception\InvalidProductStack;
 use Domain\ValueObject;
 

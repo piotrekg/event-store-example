@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Domain\Product\Event;
 
 use Domain\Product\ProductId;
-use Domain\Product\ProductName;
-use Domain\Product\ProductPrice;
 use Domain\Product\ProductStack;
 use Prooph\EventSourcing\AggregateChanged;
 
@@ -35,7 +33,7 @@ class IncreaseProductStack extends AggregateChanged
         /** @var self $event */
         $event = self::occur($productId->toString(), [
             'old_stack' => $oldStack->toString(),
-            'new_stack' => $newStack->toString()
+            'new_stack' => $newStack->toString(),
         ]);
 
         $event->productId = $productId;
