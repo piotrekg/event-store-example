@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Application\Exception;
 
-use Domain\Product\ProductId;
+use Domain\Product\BasketId;
 
 class ProductNotFoundException extends \Exception
 {
     /**
-     * @var ProductId
+     * @var BasketId
      */
     private $productId;
 
-    public function __construct(ProductId $productId)
+    public function __construct(BasketId $productId)
     {
         $this->productId = $productId;
 
@@ -23,7 +23,7 @@ class ProductNotFoundException extends \Exception
         ));
     }
 
-    public function productId(): ProductId
+    public function productId(): BasketId
     {
         return $this->productId;
     }
