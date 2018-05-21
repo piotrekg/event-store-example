@@ -1,6 +1,7 @@
 /.idea/
 /.cache/
 /build/
+.php_cs.cache
 
 ###> symfony/framework-bundle ###
 /.env
