@@ -34,8 +34,9 @@ final class CreateNewProductAction
         $id = ProductId::generate();
         $this->commandBus->dispatch(CreateNewProduct::withData(
             $id->toString(),
-            (string) $request->get('name'),
-            (float) $request->get('price')
+            $request->get('name'),
+            $request->get('price'),
+            $request->get('stock')
         ));
 
         return JsonResponse::create([

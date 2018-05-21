@@ -51,7 +51,8 @@ class CreateNewProductHandlerTest extends TestCase
         $handler(CreateNewProduct::withData(
             $product->productId()->toString(),
             $product->name()->toString(),
-            $product->price()->get()
+            $product->price()->toString(),
+            $product->stock()->toString()
         ));
 
         // then
@@ -92,7 +93,8 @@ class CreateNewProductHandlerTest extends TestCase
         $handler(CreateNewProduct::withData(
             $product->productId()->toString(),
             $product->name()->toString(),
-            $product->price()->get()
+            $product->price()->toString(),
+            $product->stock()->toString()
         ));
 
         // then

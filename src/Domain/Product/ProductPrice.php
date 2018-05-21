@@ -47,11 +47,6 @@ final class ProductPrice implements ValueObject
         $this->price = $price;
     }
 
-    public function get(): float
-    {
-        return $this->price;
-    }
-
     public function toString(): string
     {
         return (string) $this->price;

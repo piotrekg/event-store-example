@@ -29,6 +29,7 @@ CREATE TABLE `$tableName` (
   `id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `price` float COLLATE utf8_unicode_ci NOT NULL,
+  `stock` integer COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 EOT;

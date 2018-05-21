@@ -7,6 +7,7 @@ namespace Domain\Product;
 use Domain\Product\Event\ProductWasCreated;
 use Domain\Product\Exception\InvalidProductName;
 use Domain\Product\Exception\InvalidProductPrice;
+use Domain\Product\Exception\InvalidProductStock;
 use PHPUnit\Framework\TestCase;
 use Prooph\EventSourcing\EventStoreIntegration\AggregateRootDecorator;
 
@@ -16,6 +17,7 @@ class ProductTest extends TestCase
      * @throws \PHPUnit\Framework\Exception
      * @throws \LogicException
      * @throws \ReflectionException
+     * @throws \PHPUnit_Framework_Exception
      */
     public function testCreate(): void
     {
@@ -25,9 +27,10 @@ class ProductTest extends TestCase
         $id = ProductId::generate();
         $name = ProductName::fromString('Test product');
         $price = ProductPrice::fromFloat(1.23);
+        $stock = ProductStock::fromString('100');
 
         // when
-        $product = Product::create($id, $name, $price);
+        $product = Product::create($id, $name, $price, $stock);
 
         // then
         $this->assertInstanceOf(ProductId::class, $product->productId());
@@ -35,6 +38,7 @@ class ProductTest extends TestCase
         $this->assertEquals($id, $product->productId());
         $this->assertEquals($name, $product->name());
         $this->assertEquals($price, $product->price());
+        $this->assertEquals($stock, $product->stock());
 
         $recordedEvents = $decorator->extractRecordedEvents($product);
         $decorator->replayStreamEvents($product, new \ArrayIterator($recordedEvents));
@@ -46,12 +50,14 @@ class ProductTest extends TestCase
         $this->assertEquals($id, $productCreatedEvent->productId());
         $this->assertEquals($name, $productCreatedEvent->name());
         $this->assertEquals($price, $productCreatedEvent->price());
+        $this->assertEquals($stock, $productCreatedEvent->stock());
         $this->assertEquals(1, $productCreatedEvent->version());
     }
 
     /**
      * @throws \PHPUnit\Framework\Exception
      * @throws \LogicException
+     * @throws \PHPUnit_Framework_Exception
      */
     public function testCreateWithBrokenPrice(): void
     {
@@ -61,9 +67,10 @@ class ProductTest extends TestCase
         $id = ProductId::generate();
         $name = ProductName::fromString('Test product');
         $price = ProductPrice::fromString('aaaa');
+        $stock = ProductStock::fromString('100');
 
         // when
-        $product = Product::create($id, $name, $price);
+        $product = Product::create($id, $name, $price, $stock);
 
         // then
     }
@@ -71,6 +78,7 @@ class ProductTest extends TestCase
     /**
      * @throws \PHPUnit\Framework\Exception
      * @throws \LogicException
+     * @throws \PHPUnit_Framework_Exception
      */
     public function testCreateWithEmptyName(): void
     {
@@ -80,9 +88,31 @@ class ProductTest extends TestCase
         $id = ProductId::generate();
         $name = ProductName::fromString('');
         $price = ProductPrice::fromString(1.23);
+        $stock = ProductStock::fromString('100');
 
         // when
-        $product = Product::create($id, $name, $price);
+        $product = Product::create($id, $name, $price, $stock);
+
+        // then
+    }
+
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \LogicException
+     * @throws \PHPUnit_Framework_Exception
+     */
+    public function testCreateWithInvalidStock(): void
+    {
+        $this->expectException(InvalidProductStock::class);
+
+        // given
+        $id = ProductId::generate();
+        $name = ProductName::fromString('Test name');
+        $price = ProductPrice::fromString('1.23');
+        $stock = ProductStock::fromString('-1');
+
+        // when
+        $product = Product::create($id, $name, $price, $stock);
 
         // then
     }

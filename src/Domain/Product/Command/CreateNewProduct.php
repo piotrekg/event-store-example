@@ -8,6 +8,7 @@ use Assert\Assertion;
 use Domain\Product\ProductId;
 use Domain\Product\ProductName;
 use Domain\Product\ProductPrice;
+use Domain\Product\ProductStock;
 use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\PayloadConstructable;
 use Prooph\Common\Messaging\PayloadTrait;
@@ -19,12 +20,14 @@ class CreateNewProduct extends Command implements PayloadConstructable
     public static function withData(
         string $productId,
         string $name,
-        float $price
+        string $price,
+        string $stock
     ): self {
         return new self([
             'product_id' => $productId,
             'name' => $name,
             'price' => $price,
+            'stock' => $stock,
         ]);
     }
 
@@ -46,7 +49,15 @@ class CreateNewProduct extends Command implements PayloadConstructable
      */
     public function price(): ProductPrice
     {
-        return ProductPrice::fromFloat($this->payload['price']);
+        return ProductPrice::fromString($this->payload['price']);
+    }
+
+    /**
+     * @throws \Domain\Product\Exception\InvalidProductStock
+     */
+    public function stock(): ProductStock
+    {
+        return ProductStock::fromString($this->payload['stock']);
     }
 
     /**
@@ -61,7 +72,10 @@ class CreateNewProduct extends Command implements PayloadConstructable
         Assertion::string($payload['name']);
 
         Assertion::keyExists($payload, 'price');
-        Assertion::float($payload['price']);
+        Assertion::string($payload['price']);
+
+        Assertion::keyExists($payload, 'stock');
+        Assertion::string($payload['stock']);
 
         $this->payload = $payload;
     }

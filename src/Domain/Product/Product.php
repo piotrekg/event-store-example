@@ -26,16 +26,23 @@ final class Product extends AggregateRoot implements ValueObject
      */
     private $price;
 
+    /**
+     * @var ProductStock
+     */
+    private $stock;
+
     public static function create(
         ProductId $productId,
         ProductName $name,
-        ProductPrice $price
+        ProductPrice $price,
+        ProductStock $stock
     ): self {
         $self = new self();
         $self->recordThat(ProductWasCreated::withData(
             $productId,
             $name,
-            $price
+            $price,
+            $stock
         ));
 
         return $self;
@@ -56,11 +63,17 @@ final class Product extends AggregateRoot implements ValueObject
         return $this->price;
     }
 
+    public function stock(): ProductStock
+    {
+        return $this->stock;
+    }
+
     public function equals(ValueObject $other): bool
     {
         return $this->productId()->equals($other->productId())
             && $this->name()->equals($other->name())
             && $this->price()->equals($other->price())
+            && $this->stock()->equals($other->stock())
         ;
     }
 
@@ -73,6 +86,7 @@ final class Product extends AggregateRoot implements ValueObject
         $this->productId = $event->productId();
         $this->name = $event->name();
         $this->price = $event->price();
+        $this->stock = $event->stock();
     }
 
     protected function aggregateId(): string

@@ -21,6 +21,7 @@ final class ProductProjection implements ReadModelProjection
                         'id' => $event->productId()->toString(),
                         'name' => $event->name()->toString(),
                         'price' => $event->price()->toString(),
+                        'stock' => $event->stock()->toString(),
                     ]);
                 },
             ]);
