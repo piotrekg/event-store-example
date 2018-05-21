@@ -6,7 +6,7 @@ namespace Domain\Product;
 
 interface ProductRepository
 {
-    public function save(Product $product): void;
-
     public function get(ProductId $productId): ?Product;
+
+    public function save(Product $product): void;
 }

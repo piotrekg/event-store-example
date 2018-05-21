@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Domain\Product;
 
 use Domain\Product\Event\ProductWasCreated;
+use Domain\Product\Exception\InvalidProductName;
 use Domain\Product\Exception\InvalidProductPrice;
 use PHPUnit\Framework\TestCase;
 use Prooph\EventSourcing\EventStoreIntegration\AggregateRootDecorator;
@@ -14,8 +15,9 @@ class ProductTest extends TestCase
     /**
      * @throws \PHPUnit\Framework\Exception
      * @throws \LogicException
+     * @throws \ReflectionException
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $decorator = AggregateRootDecorator::newInstance();
 
@@ -29,6 +31,7 @@ class ProductTest extends TestCase
 
         // then
         $this->assertInstanceOf(ProductId::class, $product->productId());
+        $this->assertEquals($id->toString(), $this->callMethod($product, 'aggregateId'));
         $this->assertEquals($id, $product->productId());
         $this->assertEquals($name, $product->name());
         $this->assertEquals($price, $product->price());
@@ -50,7 +53,7 @@ class ProductTest extends TestCase
      * @throws \PHPUnit\Framework\Exception
      * @throws \LogicException
      */
-    public function testCreateWithBrokenPrice()
+    public function testCreateWithBrokenPrice(): void
     {
         $this->expectException(InvalidProductPrice::class);
 
@@ -63,5 +66,36 @@ class ProductTest extends TestCase
         $product = Product::create($id, $name, $price);
 
         // then
+    }
+
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     * @throws \LogicException
+     */
+    public function testCreateWithEmptyName(): void
+    {
+        $this->expectException(InvalidProductName::class);
+
+        // given
+        $id = ProductId::generate();
+        $name = ProductName::fromString('');
+        $price = ProductPrice::fromString(1.23);
+
+        // when
+        $product = Product::create($id, $name, $price);
+
+        // then
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    private static function callMethod($obj, $name, array $args = [])
+    {
+        $class = new \ReflectionClass($obj);
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($obj, $args);
     }
 }

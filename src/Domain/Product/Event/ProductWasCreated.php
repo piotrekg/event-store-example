@@ -46,10 +46,6 @@ class ProductWasCreated extends AggregateChanged
 
     public function productId(): ProductId
     {
-        if (null === $this->productId) {
-            $this->productId = ProductId::fromString($this->aggregateId());
-        }
-
         return $this->productId;
     }
 
@@ -58,10 +54,6 @@ class ProductWasCreated extends AggregateChanged
      */
     public function name(): ProductName
     {
-        if (null === $this->name) {
-            $this->name = ProductName::fromString($this->payload['name']);
-        }
-
         return $this->name;
     }
 
@@ -70,10 +62,6 @@ class ProductWasCreated extends AggregateChanged
      */
     public function price(): ProductPrice
     {
-        if (null === $this->price) {
-            $this->price = ProductPrice::fromString($this->payload['price']);
-        }
-
         return $this->price;
     }
 }

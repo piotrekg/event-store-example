@@ -28,7 +28,7 @@ class CreateNewProductHandler
      */
     public function __invoke(CreateNewProduct $command): void
     {
-        if ($product = $this->repository->get($command->productId())) {
+        if (null !== $this->repository->get($command->productId())) {
             throw ProductAlreadyExists::withProductId($command->productId());
         }
 
