@@ -25,7 +25,7 @@ class CreateNewProductHandler
      * @throws ProductAlreadyExists
      * @throws \Domain\Product\Exception\InvalidProductName
      * @throws \Domain\Product\Exception\InvalidProductPrice
-     * @throws \Domain\Product\Exception\InvalidProductStock
+     * @throws \Domain\Product\Exception\InvalidProductStack
      */
     public function __invoke(CreateNewProduct $command): void
     {
@@ -37,7 +37,7 @@ class CreateNewProductHandler
             $command->productId(),
             $command->name(),
             $command->price(),
-            $command->stock()
+            $command->stack()
         );
 
         $this->repository->save($product);

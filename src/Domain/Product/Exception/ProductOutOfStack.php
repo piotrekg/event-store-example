@@ -6,12 +6,12 @@ namespace Domain\Product\Exception;
 
 use Domain\Product\ProductId;
 
-final class ProductOutOfStock extends \InvalidArgumentException
+final class ProductOutOfStack extends \InvalidArgumentException
 {
     public static function withProductId(ProductId $productId): self
     {
         return new self(sprintf(
-            'Product "%s" is out of stock!',
+            'Product "%s" is out of stack!',
             $productId->toString()
         ));
     }

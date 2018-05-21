@@ -52,7 +52,7 @@ class CreateNewProductHandlerTest extends TestCase
             $product->productId()->toString(),
             $product->name()->toString(),
             $product->price()->toString(),
-            $product->stock()->toString()
+            $product->stack()->toString()
         ));
 
         // then
@@ -94,7 +94,7 @@ class CreateNewProductHandlerTest extends TestCase
             $product->productId()->toString(),
             $product->name()->toString(),
             $product->price()->toString(),
-            $product->stock()->toString()
+            $product->stack()->toString()
         ));
 
         // then

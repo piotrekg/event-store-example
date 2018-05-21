@@ -8,14 +8,14 @@ use Domain\Product\Product;
 use Domain\Product\ProductId;
 use Domain\Product\ProductName;
 use Domain\Product\ProductPrice;
-use Domain\Product\ProductStock;
+use Domain\Product\ProductStack;
 
 class ProductMock
 {
     /**
      * @throws \Domain\Product\Exception\InvalidProductName
      * @throws \Domain\Product\Exception\InvalidProductPrice
-     * @throws \Domain\Product\Exception\InvalidProductStock
+     * @throws \Domain\Product\Exception\InvalidProductStack
      */
     public static function get(
         string $name = 'Test name 1',
@@ -26,7 +26,7 @@ class ProductMock
             ProductId::generate(),
             ProductName::fromString($name),
             ProductPrice::fromString((string) $price),
-            ProductStock::fromString((string) $stock)
+            ProductStack::fromString((string) $stock)
         );
     }
 }

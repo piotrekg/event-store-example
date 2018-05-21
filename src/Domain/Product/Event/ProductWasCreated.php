@@ -7,7 +7,7 @@ namespace Domain\Product\Event;
 use Domain\Product\ProductId;
 use Domain\Product\ProductName;
 use Domain\Product\ProductPrice;
-use Domain\Product\ProductStock;
+use Domain\Product\ProductStack;
 use Prooph\EventSourcing\AggregateChanged;
 
 class ProductWasCreated extends AggregateChanged
@@ -28,27 +28,27 @@ class ProductWasCreated extends AggregateChanged
     private $price;
 
     /**
-     * @var ProductStock
+     * @var ProductStack
      */
-    private $stock;
+    private $stack;
 
     public static function withData(
         ProductId $productId,
         ProductName $name,
         ProductPrice $price,
-        ProductStock $stock
+        ProductStack $stack
     ): self {
         /** @var self $event */
         $event = self::occur($productId->toString(), [
             'name' => $name->toString(),
             'price' => $price->toString(),
-            'stock' => $stock->toString(),
+            'stack' => $stack->toString(),
         ]);
 
         $event->productId = $productId;
         $event->name = $name;
         $event->price = $price;
-        $event->stock = $stock;
+        $event->stack = $stack;
 
         return $event;
     }
@@ -87,14 +87,14 @@ class ProductWasCreated extends AggregateChanged
     }
 
     /**
-     * @throws \Domain\Product\Exception\InvalidProductStock
+     * @throws \Domain\Product\Exception\InvalidProductStack
      */
-    public function stock(): ProductStock
+    public function stack(): ProductStack
     {
-        if (null === $this->stock) {
-            $this->stock = ProductStock::fromString($this->payload['stock'] ?? '0');
+        if (null === $this->stack) {
+            $this->stack = ProductStack::fromString($this->payload['stack'] ?? '0');
         }
 
-        return $this->stock;
+        return $this->stack;
     }
 }

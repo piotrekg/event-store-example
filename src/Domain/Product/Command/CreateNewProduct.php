@@ -8,7 +8,7 @@ use Assert\Assertion;
 use Domain\Product\ProductId;
 use Domain\Product\ProductName;
 use Domain\Product\ProductPrice;
-use Domain\Product\ProductStock;
+use Domain\Product\ProductStack;
 use Prooph\Common\Messaging\Command;
 use Prooph\Common\Messaging\PayloadConstructable;
 use Prooph\Common\Messaging\PayloadTrait;
@@ -21,13 +21,13 @@ class CreateNewProduct extends Command implements PayloadConstructable
         string $productId,
         string $name,
         string $price,
-        string $stock
+        string $stack
     ): self {
         return new self([
             'product_id' => $productId,
             'name' => $name,
             'price' => $price,
-            'stock' => $stock,
+            'stack' => $stack,
         ]);
     }
 
@@ -53,11 +53,11 @@ class CreateNewProduct extends Command implements PayloadConstructable
     }
 
     /**
-     * @throws \Domain\Product\Exception\InvalidProductStock
+     * @throws \Domain\Product\Exception\InvalidProductStack
      */
-    public function stock(): ProductStock
+    public function stack(): ProductStack
     {
-        return ProductStock::fromString($this->payload['stock']);
+        return ProductStack::fromString($this->payload['stack']);
     }
 
     /**
@@ -74,8 +74,8 @@ class CreateNewProduct extends Command implements PayloadConstructable
         Assertion::keyExists($payload, 'price');
         Assertion::string($payload['price']);
 
-        Assertion::keyExists($payload, 'stock');
-        Assertion::string($payload['stock']);
+        Assertion::keyExists($payload, 'stack');
+        Assertion::string($payload['stack']);
 
         $this->payload = $payload;
     }

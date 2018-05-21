@@ -7,57 +7,57 @@ namespace Domain\Product;
 use Assert\Assertion;
 use Assert\AssertionFailedException;
 use Domain\Product\Exception\InvalidProductName;
-use Domain\Product\Exception\InvalidProductStock;
+use Domain\Product\Exception\InvalidProductStack;
 use Domain\ValueObject;
 
-final class ProductStock implements ValueObject
+final class ProductStack implements ValueObject
 {
     /**
      * @var int
      */
-    private $stock;
+    private $stack;
 
     /**
-     * @throws InvalidProductStock
+     * @throws InvalidProductStack
      */
-    public static function fromString(string $stock): self
+    public static function fromString(string $stack): self
     {
-        return new self((int) $stock);
+        return new self((int) $stack);
     }
 
     /**
-     * @throws InvalidProductStock
+     * @throws InvalidProductStack
      */
-    private function __construct(int $stock)
+    private function __construct(int $stack)
     {
         try {
-            Assertion::min($stock, 0);
+            Assertion::min($stack, 0);
         } catch (AssertionFailedException $e) {
-            throw InvalidProductStock::reason($e->getMessage());
+            throw InvalidProductStack::reason($e->getMessage());
         }
-        $this->stock = $stock;
+        $this->stack = $stack;
     }
 
     public function toString(): string
     {
-        return (string) $this->stock;
+        return (string) $this->stack;
     }
 
     public function equals(ValueObject $object): bool
     {
         return get_class($this) === get_class($object)
-            && $this->stock === $object->stock;
+            && $this->stack === $object->stack;
     }
 
-    public function inStock(): bool
+    public function inStack(): bool
     {
-        return $this->stock > 0;
+        return $this->stack > 0;
     }
 
     public function decrease(): self
     {
         $object = clone $this;
-        --$object->stock;
+        --$object->stack;
 
         return $object;
     }
@@ -65,13 +65,13 @@ final class ProductStock implements ValueObject
     public function increase(): self
     {
         $object = clone $this;
-        ++$object->stock;
+        ++$object->stack;
 
         return $object;
     }
 
     public function get(): int
     {
-        return $this->stock;
+        return $this->stack;
     }
 }

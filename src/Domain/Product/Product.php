@@ -8,7 +8,7 @@ use Domain\Product\Event\IncreaseProductStack;
 use Domain\Product\Event\ProductWasAdded;
 use Domain\Product\Event\ProductWasCreated;
 use Domain\Product\Event\DecreaseProductStack;
-use Domain\Product\Exception\ProductOutOfStock;
+use Domain\Product\Exception\ProductOutOfStack;
 use Domain\ValueObject;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
@@ -31,40 +31,40 @@ final class Product extends AggregateRoot implements ValueObject
     private $price;
 
     /**
-     * @var ProductStock
+     * @var ProductStack
      */
-    private $stock;
+    private $stack;
 
     public static function create(
         ProductId $productId,
         ProductName $name,
         ProductPrice $price,
-        ProductStock $stock
+        ProductStack $stack
     ): self {
         $self = new self();
         $self->recordThat(ProductWasCreated::withData(
             $productId,
             $name,
             $price,
-            $stock
+            $stack
         ));
 
         return $self;
     }
 
     /**
-     * @throws ProductOutOfStock
+     * @throws ProductOutOfStack
      */
     public function decreaseStack(): void
     {
-        if (false === $this->stock()->inStock()) {
-            throw ProductOutOfStock::withProductId($this->productId());
+        if (false === $this->stack()->inStack()) {
+            throw ProductOutOfStack::withProductId($this->productId());
         }
         
         $this->recordThat(DecreaseProductStack::decrease(
             $this->productId(),
-            $this->stock(),
-            $this->stock()->decrease()
+            $this->stack(),
+            $this->stack()->decrease()
         ));
     }
 
@@ -72,8 +72,8 @@ final class Product extends AggregateRoot implements ValueObject
     {
         $this->recordThat(IncreaseProductStack::increase(
             $this->productId(),
-            $this->stock(),
-            $this->stock()->increase()
+            $this->stack(),
+            $this->stack()->increase()
         ));
     }
 
@@ -92,9 +92,9 @@ final class Product extends AggregateRoot implements ValueObject
         return $this->price;
     }
 
-    public function stock(): ProductStock
+    public function stack(): ProductStack
     {
-        return $this->stock;
+        return $this->stack;
     }
 
     public function equals(ValueObject $other): bool
@@ -102,37 +102,37 @@ final class Product extends AggregateRoot implements ValueObject
         return $this->productId()->equals($other->productId())
             && $this->name()->equals($other->name())
             && $this->price()->equals($other->price())
-            && $this->stock()->equals($other->stock())
+            && $this->stack()->equals($other->stack())
         ;
     }
 
     /**
      * @throws Exception\InvalidProductName
      * @throws Exception\InvalidProductPrice
-     * @throws Exception\InvalidProductStock
+     * @throws Exception\InvalidProductStack
      */
     protected function whenProductWasCreated(ProductWasCreated $event): void
     {
         $this->productId = $event->productId();
         $this->name = $event->name();
         $this->price = $event->price();
-        $this->stock = $event->stock();
+        $this->stack = $event->stack();
     }
 
     /**
-     * @throws Exception\InvalidProductStock
+     * @throws Exception\InvalidProductStack
      */
     protected function whenDecreaseProductStack(DecreaseProductStack $event): void
     {
-        $this->stock = $event->newStock();
+        $this->stack = $event->newStack();
     }
 
     /**
-     * @throws Exception\InvalidProductStock
+     * @throws Exception\InvalidProductStack
      */
     protected function whenIncreaseProductStack(IncreaseProductStack $event): void
     {
-        $this->stock = $event->newStock();
+        $this->stack = $event->newStack();
     }
 
     protected function aggregateId(): string

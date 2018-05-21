@@ -9,8 +9,8 @@ use Domain\Product\Event\DecreaseProductStack;
 use Domain\Product\Event\ProductWasCreated;
 use Domain\Product\Exception\InvalidProductName;
 use Domain\Product\Exception\InvalidProductPrice;
-use Domain\Product\Exception\InvalidProductStock;
-use Domain\Product\Exception\ProductOutOfStock;
+use Domain\Product\Exception\InvalidProductStack;
+use Domain\Product\Exception\ProductOutOfStack;
 use PHPUnit\Framework\TestCase;
 use Prooph\EventSourcing\EventStoreIntegration\AggregateRootDecorator;
 
@@ -30,7 +30,7 @@ class ProductTest extends TestCase
         $id = ProductId::generate();
         $name = ProductName::fromString('Test product');
         $price = ProductPrice::fromString('1.23');
-        $stock = ProductStock::fromString('100');
+        $stock = ProductStack::fromString('100');
 
         // when
         $product = Product::create($id, $name, $price, $stock);
@@ -41,7 +41,7 @@ class ProductTest extends TestCase
         $this->assertEquals($id, $product->productId());
         $this->assertEquals($name, $product->name());
         $this->assertEquals($price, $product->price());
-        $this->assertEquals($stock, $product->stock());
+        $this->assertEquals($stock, $product->stack());
 
         $recordedEvents = $decorator->extractRecordedEvents($product);
         $decorator->replayStreamEvents($product, new \ArrayIterator($recordedEvents));
@@ -53,7 +53,7 @@ class ProductTest extends TestCase
         $this->assertEquals($id, $productCreatedEvent->productId());
         $this->assertEquals($name, $productCreatedEvent->name());
         $this->assertEquals($price, $productCreatedEvent->price());
-        $this->assertEquals($stock, $productCreatedEvent->stock());
+        $this->assertEquals($stock, $productCreatedEvent->stack());
         $this->assertEquals(1, $productCreatedEvent->version());
     }
 
@@ -70,7 +70,7 @@ class ProductTest extends TestCase
         $id = ProductId::generate();
         $name = ProductName::fromString('Test product');
         $price = ProductPrice::fromString('aaaa');
-        $stock = ProductStock::fromString('100');
+        $stock = ProductStack::fromString('100');
 
         // when
         $product = Product::create($id, $name, $price, $stock);
@@ -91,7 +91,7 @@ class ProductTest extends TestCase
         $id = ProductId::generate();
         $name = ProductName::fromString('');
         $price = ProductPrice::fromString('1.23');
-        $stock = ProductStock::fromString('100');
+        $stock = ProductStack::fromString('100');
 
         // when
         $product = Product::create($id, $name, $price, $stock);
@@ -106,13 +106,13 @@ class ProductTest extends TestCase
      */
     public function testCreateWithInvalidStock(): void
     {
-        $this->expectException(InvalidProductStock::class);
+        $this->expectException(InvalidProductStack::class);
 
         // given
         $id = ProductId::generate();
         $name = ProductName::fromString('Test name');
         $price = ProductPrice::fromString('1.23');
-        $stock = ProductStock::fromString('-1');
+        $stock = ProductStack::fromString('-1');
 
         // when
         $product = Product::create($id, $name, $price, $stock);
@@ -123,16 +123,16 @@ class ProductTest extends TestCase
     /**
      * @throws InvalidProductName
      * @throws InvalidProductPrice
-     * @throws InvalidProductStock
+     * @throws InvalidProductStack
      * @throws \ReflectionException
-     * @throws Exception\ProductOutOfStock
+     * @throws Exception\ProductOutOfStack
      */
     public function testTakeOffFromStock(): void
     {
         $decorator = AggregateRootDecorator::newInstance();
 
         // given
-        $stock = ProductStock::fromString('100');
+        $stock = ProductStack::fromString('100');
         $product = ProductMock::get('Test Name', 1.23, $stock->get());
 
         // when
@@ -145,7 +145,7 @@ class ProductTest extends TestCase
         $this->assertEquals(2, count($recordedEvents));
         $this->assertEquals(
             $stock->decrease(),
-            $product->stock()
+            $product->stack()
         );
 
         /** @var DecreaseProductStack $productHasBeenTakenOffEvent */
@@ -153,11 +153,11 @@ class ProductTest extends TestCase
         $this->assertEquals($product->productId(), $productHasBeenTakenOffEvent->productId());
         $this->assertEquals(
             $stock,
-            $productHasBeenTakenOffEvent->oldStock()
+            $productHasBeenTakenOffEvent->oldStack()
         );
         $this->assertEquals(
             $stock->decrease(),
-            $productHasBeenTakenOffEvent->newStock()
+            $productHasBeenTakenOffEvent->newStack()
         );
         $this->assertEquals(2, $productHasBeenTakenOffEvent->version());
     }
@@ -165,16 +165,16 @@ class ProductTest extends TestCase
     /**
      * @throws InvalidProductName
      * @throws InvalidProductPrice
-     * @throws InvalidProductStock
+     * @throws InvalidProductStack
      * @throws \ReflectionException
-     * @throws Exception\ProductOutOfStock
+     * @throws Exception\ProductOutOfStack
      */
     public function testTakeOffFromStockWhenItsEmpty(): void
     {
-        $this->expectException(ProductOutOfStock::class);
+        $this->expectException(ProductOutOfStack::class);
 
         // given
-        $stock = ProductStock::fromString('0');
+        $stock = ProductStack::fromString('0');
         $product = ProductMock::get('Test Name', 1.23, $stock->get());
 
         // when
@@ -186,16 +186,16 @@ class ProductTest extends TestCase
     /**
      * @throws InvalidProductName
      * @throws InvalidProductPrice
-     * @throws InvalidProductStock
+     * @throws InvalidProductStack
      * @throws \ReflectionException
-     * @throws Exception\ProductOutOfStock
+     * @throws Exception\ProductOutOfStack
      */
     public function testAddToStock(): void
     {
         $decorator = AggregateRootDecorator::newInstance();
 
         // given
-        $stock = ProductStock::fromString('100');
+        $stock = ProductStack::fromString('100');
         $product = ProductMock::get('Test Name', 1.23, $stock->get());
 
         // when
@@ -208,7 +208,7 @@ class ProductTest extends TestCase
         $this->assertEquals(2, count($recordedEvents));
         $this->assertEquals(
             $stock->increase(),
-            $product->stock()
+            $product->stack()
         );
 
         /** @var DecreaseProductStack $productHasBeenTakenOffEvent */
@@ -216,11 +216,11 @@ class ProductTest extends TestCase
         $this->assertEquals($product->productId(), $productHasBeenTakenOffEvent->productId());
         $this->assertEquals(
             $stock,
-            $productHasBeenTakenOffEvent->oldStock()
+            $productHasBeenTakenOffEvent->oldStack()
         );
         $this->assertEquals(
             $stock->increase(),
-            $productHasBeenTakenOffEvent->newStock()
+            $productHasBeenTakenOffEvent->newStack()
         );
         $this->assertEquals(2, $productHasBeenTakenOffEvent->version());
     }

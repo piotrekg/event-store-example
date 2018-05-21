@@ -7,7 +7,7 @@ namespace Domain\Product\Event;
 use Domain\Product\ProductId;
 use Domain\Product\ProductName;
 use Domain\Product\ProductPrice;
-use Domain\Product\ProductStock;
+use Domain\Product\ProductStack;
 use Prooph\EventSourcing\AggregateChanged;
 
 class IncreaseProductStack extends AggregateChanged
@@ -18,24 +18,24 @@ class IncreaseProductStack extends AggregateChanged
     private $productId;
 
     /**
-     * @var ProductStock
+     * @var ProductStack
      */
-    private $oldStock;
+    private $oldStack;
 
     /**
-     * @var ProductStock
+     * @var ProductStack
      */
-    private $newStock;
+    private $newStack;
 
     public static function increase(
         ProductId $productId,
-        ProductStock $oldStock,
-        ProductStock $newStock
+        ProductStack $oldStack,
+        ProductStack $newStack
     ): self {
         /** @var self $event */
         $event = self::occur($productId->toString(), [
-            'old_stock' => $oldStock->toString(),
-            'new_stock' => $newStock->toString()
+            'old_stack' => $oldStack->toString(),
+            'new_stack' => $newStack->toString()
         ]);
 
         $event->productId = $productId;
@@ -53,26 +53,26 @@ class IncreaseProductStack extends AggregateChanged
     }
 
     /**
-     * @throws \Domain\Product\Exception\InvalidProductStock
+     * @throws \Domain\Product\Exception\InvalidProductStack
      */
-    public function oldStock(): ProductStock
+    public function oldStack(): ProductStack
     {
-        if (null === $this->oldStock) {
-            $this->oldStock = ProductStock::fromString($this->payload['old_stock']);
+        if (null === $this->oldStack) {
+            $this->oldStack = ProductStack::fromString($this->payload['old_stack']);
         }
 
-        return $this->oldStock;
+        return $this->oldStack;
     }
 
     /**
-     * @throws \Domain\Product\Exception\InvalidProductStock
+     * @throws \Domain\Product\Exception\InvalidProductStack
      */
-    public function newStock(): ProductStock
+    public function newStack(): ProductStack
     {
-        if (null === $this->newStock) {
-            $this->newStock = ProductStock::fromString($this->payload['new_stock']);
+        if (null === $this->newStack) {
+            $this->newStack = ProductStack::fromString($this->payload['new_stack']);
         }
 
-        return $this->newStock;
+        return $this->newStack;
     }
 }
