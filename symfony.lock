@@ -68,6 +68,18 @@
     "phpspec/prophecy": {
         "version": "1.7.6"
     },
+    "phpunit/php-code-coverage": {
+        "version": "6.0.4"
+    },
+    "phpunit/php-file-iterator": {
+        "version": "1.4.5"
+    },
+    "phpunit/php-text-template": {
+        "version": "1.2.1"
+    },
+    "phpunit/php-token-stream": {
+        "version": "3.0.0"
+    },
     "prooph/common": {
         "version": "v4.2.2"
     },
@@ -122,17 +134,26 @@
     "roave/security-advisories": {
         "version": "dev-master"
     },
+    "sebastian/code-unit-reverse-lookup": {
+        "version": "1.0.1"
+    },
     "sebastian/comparator": {
         "version": "3.0.0"
     },
     "sebastian/diff": {
         "version": "3.0.0"
     },
+    "sebastian/environment": {
+        "version": "3.1.0"
+    },
     "sebastian/exporter": {
         "version": "3.1.0"
     },
     "sebastian/recursion-context": {
         "version": "3.0.0"
+    },
+    "sebastian/version": {
+        "version": "2.0.1"
     },
     "sensio/framework-extra-bundle": {
         "version": "4.0",
@@ -268,6 +289,9 @@
     },
     "symfony/yaml": {
         "version": "v4.0.9"
+    },
+    "theseer/tokenizer": {
+        "version": "1.1.0"
     },
     "twig/twig": {
         "version": "v2.4.8"
