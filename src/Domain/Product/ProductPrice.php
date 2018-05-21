@@ -27,14 +27,6 @@ final class ProductPrice implements ValueObject
     /**
      * @throws InvalidProductPrice
      */
-    public static function fromFloat(float $price): self
-    {
-        return new self($price);
-    }
-
-    /**
-     * @throws InvalidProductPrice
-     */
     private function __construct(float $price)
     {
         try {

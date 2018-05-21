@@ -13,7 +13,7 @@ use Domain\ValueObject;
 final class ProductStock implements ValueObject
 {
     /**
-     * @var string
+     * @var int
      */
     private $stock;
 
@@ -22,13 +22,13 @@ final class ProductStock implements ValueObject
      */
     public static function fromString(string $stock): self
     {
-        return new self($stock);
+        return new self((int) $stock);
     }
 
     /**
      * @throws InvalidProductStock
      */
-    private function __construct(string $stock)
+    private function __construct(int $stock)
     {
         try {
             Assertion::min($stock, 0);
@@ -47,5 +47,31 @@ final class ProductStock implements ValueObject
     {
         return get_class($this) === get_class($object)
             && $this->stock === $object->stock;
+    }
+
+    public function inStock(): bool
+    {
+        return $this->stock > 0;
+    }
+
+    public function decrease(): self
+    {
+        $object = clone $this;
+        --$object->stock;
+
+        return $object;
+    }
+
+    public function increase(): self
+    {
+        $object = clone $this;
+        ++$object->stock;
+
+        return $object;
+    }
+
+    public function get(): int
+    {
+        return $this->stock;
     }
 }

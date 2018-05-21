@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Domain\Product;
 
+use Domain\Product\Event\IncreaseProductStack;
+use Domain\Product\Event\ProductWasAdded;
 use Domain\Product\Event\ProductWasCreated;
+use Domain\Product\Event\DecreaseProductStack;
+use Domain\Product\Exception\ProductOutOfStock;
 use Domain\ValueObject;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
@@ -48,6 +52,31 @@ final class Product extends AggregateRoot implements ValueObject
         return $self;
     }
 
+    /**
+     * @throws ProductOutOfStock
+     */
+    public function decreaseStack(): void
+    {
+        if (false === $this->stock()->inStock()) {
+            throw ProductOutOfStock::withProductId($this->productId());
+        }
+        
+        $this->recordThat(DecreaseProductStack::decrease(
+            $this->productId(),
+            $this->stock(),
+            $this->stock()->decrease()
+        ));
+    }
+
+    public function increaseStack(): void
+    {
+        $this->recordThat(IncreaseProductStack::increase(
+            $this->productId(),
+            $this->stock(),
+            $this->stock()->increase()
+        ));
+    }
+
     public function productId(): ProductId
     {
         return $this->productId;
@@ -80,6 +109,7 @@ final class Product extends AggregateRoot implements ValueObject
     /**
      * @throws Exception\InvalidProductName
      * @throws Exception\InvalidProductPrice
+     * @throws Exception\InvalidProductStock
      */
     protected function whenProductWasCreated(ProductWasCreated $event): void
     {
@@ -87,6 +117,22 @@ final class Product extends AggregateRoot implements ValueObject
         $this->name = $event->name();
         $this->price = $event->price();
         $this->stock = $event->stock();
+    }
+
+    /**
+     * @throws Exception\InvalidProductStock
+     */
+    protected function whenDecreaseProductStack(DecreaseProductStack $event): void
+    {
+        $this->stock = $event->newStock();
+    }
+
+    /**
+     * @throws Exception\InvalidProductStock
+     */
+    protected function whenIncreaseProductStack(IncreaseProductStack $event): void
+    {
+        $this->stock = $event->newStock();
     }
 
     protected function aggregateId(): string

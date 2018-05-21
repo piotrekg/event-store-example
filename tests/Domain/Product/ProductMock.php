@@ -25,7 +25,7 @@ class ProductMock
         return Product::create(
             ProductId::generate(),
             ProductName::fromString($name),
-            ProductPrice::fromFloat($price),
+            ProductPrice::fromString((string) $price),
             ProductStock::fromString((string) $stock)
         );
     }
