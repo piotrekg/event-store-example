@@ -9,7 +9,7 @@ use Domain\ValueObject;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
 
-class Product extends AggregateRoot implements ValueObject
+final class Product extends AggregateRoot implements ValueObject
 {
     /**
      * @var ProductId
