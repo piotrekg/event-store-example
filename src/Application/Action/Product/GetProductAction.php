@@ -6,6 +6,7 @@ namespace Application\Action\Product;
 
 use Application\Exception\ProductNotFoundException;
 use Domain\Product\BasketId;
+use Domain\Product\ProductId;
 use Infrastructure\Product\Projection\ProductFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ final class GetProductAction
      */
     public function __invoke(string $productId): JsonResponse
     {
-        $productId = BasketId::fromString($productId);
+        $productId = ProductId::fromString($productId);
         $product = $this->finder->findById($productId);
 
         if (null === $product) {

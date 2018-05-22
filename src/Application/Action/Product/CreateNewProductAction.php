@@ -6,6 +6,7 @@ namespace Application\Action\Product;
 
 use Domain\Product\Command\CreateNewProduct;
 use Domain\Product\BasketId;
+use Domain\Product\ProductId;
 use Prooph\ServiceBus\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ final class CreateNewProductAction
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $id = BasketId::generate();
+        $id = ProductId::generate();
         $this->commandBus->dispatch(CreateNewProduct::withData(
             $id->toString(),
             $request->get('name'),
