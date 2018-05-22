@@ -6,7 +6,9 @@ namespace Domain\Basket;
 
 use Domain\Basket\Event\BasketCreated;
 use Domain\Basket\Event\ProductAddedToBasket;
+use Domain\Basket\Event\ProductRemovedFromBasket;
 use Domain\Basket\Exception\ProductAddedTwiceException;
+use Domain\Basket\Exception\ProductNotFoundInBasketException;
 use Domain\Product\ProductId;
 use Domain\ValueObject;
 use Prooph\EventSourcing\AggregateChanged;
@@ -50,6 +52,24 @@ class Basket extends AggregateRoot implements ValueObject
         ));
     }
 
+    /**
+     * @throws ProductNotFoundInBasketException
+     */
+    public function removeProduct(ProductId $productId)
+    {
+        if (in_array($productId->toString(), $this->products)) {
+            throw new ProductNotFoundInBasketException(
+                $this->basketId(),
+                $productId
+            );
+        }
+
+        $this->recordThat(ProductRemovedFromBasket::toBasket(
+            $this->basketId(),
+            $productId
+        ));
+    }
+
     public function basketId(): BasketId
     {
         return $this->basketId;
@@ -74,6 +94,11 @@ class Basket extends AggregateRoot implements ValueObject
     protected function whenProductAddedToBasket(ProductAddedToBasket $event): void
     {
         $this->products[$event->productId()->toString()] = $event->productId();
+    }
+
+    protected function whenProductRemovedFromBasket(ProductRemovedFromBasket $event): void
+    {
+        unset($this->products[$event->productId()->toString()]);
     }
 
     /**
