@@ -7,7 +7,7 @@ namespace Domain\Basket\Event;
 use Domain\Basket\BasketId;
 use Prooph\EventSourcing\AggregateChanged;
 
-class BasketCreated extends AggregateChanged
+class BasketWasCreated extends AggregateChanged
 {
     /**
      * @var BasketId

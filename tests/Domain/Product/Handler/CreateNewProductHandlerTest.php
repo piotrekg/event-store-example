@@ -21,6 +21,7 @@ class CreateNewProductHandlerTest extends TestCase
      * @throws \LogicException
      * @throws \Prophecy\Exception\Prophecy\ObjectProphecyException
      * @throws \PHPUnit\Framework\AssertionFailedError
+     * @throws \PHPUnit_Framework_AssertionFailedError
      */
     public function testHandleSuccess(): void
     {
@@ -66,6 +67,7 @@ class CreateNewProductHandlerTest extends TestCase
      * @throws \LogicException
      * @throws \Prophecy\Exception\Prophecy\ObjectProphecyException
      * @throws \PHPUnit\Framework\AssertionFailedError
+     * @throws \PHPUnit_Framework_Exception
      */
     public function testHandleFail(): void
     {

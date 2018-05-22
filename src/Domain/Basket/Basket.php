@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Domain\Basket;
 
-use Domain\Basket\Event\BasketCreated;
+use function array_keys;
+use Domain\Basket\Event\BasketWasCreated;
 use Domain\Basket\Event\ProductAddedToBasket;
 use Domain\Basket\Event\ProductRemovedFromBasket;
+use Domain\Basket\Exception\BasketIsEmptyException;
 use Domain\Basket\Exception\ProductAddedTwiceException;
 use Domain\Basket\Exception\ProductNotFoundInBasketException;
 use Domain\Product\ProductId;
 use Domain\ValueObject;
+use function key;
+use function key_exists;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
 
@@ -26,10 +30,15 @@ class Basket extends AggregateRoot implements ValueObject
      */
     private $products;
 
+    protected function __construct()
+    {
+        $this->products = [];
+    }
+
     public static function createBasket(BasketId $basketId): self
     {
         $self = new self();
-        $self->recordThat(BasketCreated::create($basketId));
+        $self->recordThat(BasketWasCreated::create($basketId));
 
         return $self;
     }
@@ -39,7 +48,7 @@ class Basket extends AggregateRoot implements ValueObject
      */
     public function addProduct(ProductId $productId)
     {
-        if (in_array($productId->toString(), $this->products)) {
+        if (key_exists($productId->toString(), $this->products)) {
             throw new ProductAddedTwiceException(
                 $this->basketId(),
                 $productId
@@ -54,10 +63,15 @@ class Basket extends AggregateRoot implements ValueObject
 
     /**
      * @throws ProductNotFoundInBasketException
+     * @throws BasketIsEmptyException
      */
     public function removeProduct(ProductId $productId)
     {
-        if (in_array($productId->toString(), $this->products)) {
+        if ($this->isEmptyBasket()) {
+            throw new BasketIsEmptyException($this->basketId());
+        }
+
+        if (!key_exists($productId->toString(), $this->products)) {
             throw new ProductNotFoundInBasketException(
                 $this->basketId(),
                 $productId
@@ -75,6 +89,16 @@ class Basket extends AggregateRoot implements ValueObject
         return $this->basketId;
     }
 
+    public function productsCount(): int
+    {
+        return count($this->products);
+    }
+
+    private function isEmptyBasket(): bool
+    {
+        return 0 === $this->productsCount();
+    }
+
     protected function aggregateId(): string
     {
         return $this->basketId()->toString();
@@ -86,7 +110,7 @@ class Basket extends AggregateRoot implements ValueObject
         $this->basketId()->equals($other->basketId());
     }
 
-    protected function whenBasketCreated(BasketCreated $event): void
+    protected function whenBasketWasCreated(BasketWasCreated $event): void
     {
         $this->basketId = $event->basketId();
     }
