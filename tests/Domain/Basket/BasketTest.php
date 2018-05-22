@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: piotrek
- * Date: 22/05/2018
- * Time: 14:40
- */
+
+declare(strict_types=1);
 
 namespace Domain\Basket;
 
@@ -61,7 +57,7 @@ class BasketTest extends TestCase
      * @throws \ReflectionException
      * @throws \PHPUnit_Framework_Exception
      */
-    public function testAddProductSuccess()
+    public function testAddProductSuccess(): void
     {
         // given
         $productId = ProductId::generate();
@@ -93,7 +89,7 @@ class BasketTest extends TestCase
      * @throws \ReflectionException
      * @throws \PHPUnit_Framework_Exception
      */
-    public function testAddProductFailWithDoubleProduct()
+    public function testAddProductFailWithDoubleProduct(): void
     {
         $this->expectException(ProductAddedTwiceException::class);
 
@@ -116,7 +112,7 @@ class BasketTest extends TestCase
      * @throws BasketIsEmptyException
      * @throws \PHPUnit_Framework_Exception
      */
-    public function testRemoveProduct()
+    public function testRemoveProduct(): void
     {
         // given
         $productIdOne = ProductId::generate();
@@ -153,7 +149,7 @@ class BasketTest extends TestCase
      * @throws Exception\BasketIsEmptyException
      * @throws \PHPUnit_Framework_Exception
      */
-    public function testRemoveProductFailWithProductNotFound()
+    public function testRemoveProductFailWithProductNotFound(): void
     {
         $this->expectException(ProductNotFoundInBasketException::class);
 
@@ -176,7 +172,7 @@ class BasketTest extends TestCase
      * @throws Exception\BasketIsEmptyException
      * @throws \PHPUnit_Framework_Exception
      */
-    public function testRemoveProductFailWithEmptyBasket()
+    public function testRemoveProductFailWithEmptyBasket(): void
     {
         $this->expectException(BasketIsEmptyException::class);
 
