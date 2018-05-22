@@ -62,7 +62,7 @@ class Basket extends AggregateRoot implements ValueObject
 
     public function equals(ValueObject $other): bool
     {
-        /** @var self $other */
+        /* @var self $other */
         $this->basketId()->equals($other->basketId());
     }
 

@@ -98,7 +98,7 @@ final class Product extends AggregateRoot implements ValueObject
 
     public function equals(ValueObject $other): bool
     {
-        /** @var self $other */
+        /* @var self $other */
         return $this->productId()->equals($other->productId())
             && $this->name()->equals($other->name())
             && $this->price()->equals($other->price())
