@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Domain\Basket;
 
-use function array_keys;
 use Domain\Basket\Event\BasketWasCreated;
 use Domain\Basket\Event\ProductAddedToBasket;
 use Domain\Basket\Event\ProductRemovedFromBasket;
@@ -13,7 +12,6 @@ use Domain\Basket\Exception\ProductAddedTwiceException;
 use Domain\Basket\Exception\ProductNotFoundInBasketException;
 use Domain\Product\ProductId;
 use Domain\ValueObject;
-use function key;
 use function key_exists;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
