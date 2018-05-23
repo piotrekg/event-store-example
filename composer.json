@@ -21,6 +21,7 @@
         "symfony/framework-bundle": "^4.1",
         "symfony/lts": "^4@dev",
         "symfony/psr-http-message-bridge": "^1.0",
+        "symfony/serializer-pack": "^1.0",
         "symfony/var-dumper": "^4.1",
         "symfony/yaml": "^4.1",
         "zendframework/zend-diactoros": "^1.7"
