@@ -9,8 +9,8 @@ use Domain\Basket\Command\AddProductToBasket;
 use Domain\Basket\Command\CreateNewBasket;
 use Prooph\ServiceBus\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 final class AddProductToBasketAction
@@ -30,16 +30,16 @@ final class AddProductToBasketAction
      *
      * @throws \Prooph\ServiceBus\Exception\CommandDispatchException
      */
-    public function __invoke(string $productId, Request $request): JsonResponse
+    public function __invoke(string $productId, Session $session): JsonResponse
     {
-        if (!$basketId = $request->getSession()->get('basketId')) {
+        if (!$basketId = $session->get('basketId')) {
             $basketId = BasketId::generate();
 
             $this->commandBus->dispatch(CreateNewBasket::withData(
                 $basketId->toString()
             ));
 
-            $request->getSession()->get('basketId', $basketId);
+            $session->set('basketId', $basketId);
         }
 
         $this->commandBus->dispatch(AddProductToBasket::withData(
