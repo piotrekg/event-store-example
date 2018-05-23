@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Application\Action\Basket;
 
-use Domain\Basket\Basket;
 use Domain\Basket\BasketId;
 use Domain\Basket\Command\AddProductToBasket;
 use Domain\Basket\Command\CreateNewBasket;
-use Domain\Product\ProductId;
 use Prooph\ServiceBus\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +26,7 @@ final class AddProductToBasketAction
     }
 
     /**
-     * @Route(name="basket-add_product", path="/basket/{productId}", methods={"PUT"})
+     * @Route(name="basket_add_product", path="/basket/{productId}", methods={"PUT"})
      *
      * @throws \Prooph\ServiceBus\Exception\CommandDispatchException
      */
