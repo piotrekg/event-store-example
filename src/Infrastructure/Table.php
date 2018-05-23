@@ -7,4 +7,5 @@ namespace Infrastructure;
 class Table
 {
     const PRODUCT = 'read_product';
+    const BASKET = 'read_basket';
 }

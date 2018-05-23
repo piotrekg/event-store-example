@@ -1,6 +1,6 @@
 services:
     # Product
-    Infrastructure\Product\Repository\EventStoreProductRepository: ~
+    Infrastructure\Product\EventStoreProductRepository: ~
 
     Infrastructure\Product\Projection\ProductProjection: ~
 
@@ -8,4 +8,15 @@ services:
         arguments: ['@Doctrine\DBAL\Driver\Connection']
 
     Infrastructure\Product\Projection\ProductReadModel:
+        arguments: ['@doctrine.dbal.default_connection']
+
+    # Basket
+    Infrastructure\Basket\EventStoreBasketRepository: ~
+
+    Infrastructure\Basket\Projection\BasketProjection: ~
+
+    Infrastructure\Basket\Projection\BasketFinder:
+        arguments: ['@Doctrine\DBAL\Driver\Connection']
+
+    Infrastructure\Basket\Projection\BasketReadModel:
         arguments: ['@doctrine.dbal.default_connection']

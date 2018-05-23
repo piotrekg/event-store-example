@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Application\Action\Product;
 
 use Application\Exception\ProductNotFoundException;
-use Domain\Product\BasketId;
 use Domain\Product\ProductId;
 use Infrastructure\Product\Projection\ProductFinder;
 use Symfony\Component\HttpFoundation\JsonResponse;

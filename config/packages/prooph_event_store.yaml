@@ -7,6 +7,10 @@ prooph_event_store:
                     repository_class: Infrastructure\Product\EventStoreProductRepository
                     aggregate_type: Domain\Product\Product
                     aggregate_translator: Prooph\EventSourcing\EventStoreIntegration\EventStoreAggregateTranslator
+                basket_collection:
+                    repository_class: Infrastructure\Basket\EventStoreBasketRepository
+                    aggregate_type: Domain\Basket\Basket
+                    aggregate_translator: Prooph\EventSourcing\EventStoreIntegration\EventStoreAggregateTranslator
 
     projection_managers:
         product_projection_manager:
@@ -16,3 +20,11 @@ prooph_event_store:
                 product_projection:
                     read_model: Infrastructure\Product\Projection\ProductReadModel
                     projection: Infrastructure\Product\Projection\ProductProjection
+
+        basket_projection_manager:
+            event_store: Prooph\EventStore\Pdo\MariaDbEventStore
+            connection: Doctrine\DBAL\Driver\Connection
+            projections:
+                basket_projection:
+                    read_model: Infrastructure\Basket\Projection\BasketReadModel
+                    projection: Infrastructure\Basket\Projection\BasketProjection

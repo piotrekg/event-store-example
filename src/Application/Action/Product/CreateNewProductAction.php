@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Application\Action\Product;
 
 use Domain\Product\Command\CreateNewProduct;
-use Domain\Product\BasketId;
 use Domain\Product\ProductId;
 use Prooph\ServiceBus\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;
