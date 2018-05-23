@@ -7,7 +7,9 @@ namespace Application\Action\Basket;
 use Domain\Basket\BasketId;
 use Domain\Basket\Command\AddProductToBasket;
 use Domain\Basket\Command\CreateNewBasket;
+use Domain\Basket\Exception\BasketNotFoundException;
 use Prooph\ServiceBus\CommandBus;
+use Prooph\ServiceBus\Exception\CommandDispatchException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -42,10 +44,25 @@ final class AddProductToBasketAction
             $session->set('basketId', $basketId);
         }
 
-        $this->commandBus->dispatch(AddProductToBasket::withData(
-            $basketId->toString(),
-            $productId
-        ));
+        try {
+            $this->commandBus->dispatch(AddProductToBasket::withData(
+                $basketId->toString(),
+                $productId
+            ));
+        } catch (CommandDispatchException $dispatchException) {
+            if ($dispatchException->getPrevious() instanceof BasketNotFoundException) {
+                $this->commandBus->dispatch(CreateNewBasket::withData(
+                    $basketId->toString()
+                ));
+
+                $this->commandBus->dispatch(AddProductToBasket::withData(
+                    $basketId->toString(),
+                    $productId
+                ));
+            } else {
+                throw $dispatchException;
+            }
+        }
 
         return JsonResponse::create([
                 'message' => 'ok',

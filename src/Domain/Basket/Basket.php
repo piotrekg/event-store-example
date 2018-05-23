@@ -10,6 +10,7 @@ use Domain\Basket\Event\ProductRemovedFromBasket;
 use Domain\Basket\Exception\BasketIsEmptyException;
 use Domain\Basket\Exception\ProductAddedTwiceException;
 use Domain\Basket\Exception\ProductNotFoundInBasketException;
+use Domain\Product\Product;
 use Domain\Product\ProductId;
 use Domain\ValueObject;
 use function key_exists;
@@ -85,6 +86,14 @@ class Basket extends AggregateRoot implements ValueObject
     public function basketId(): BasketId
     {
         return $this->basketId;
+    }
+
+    /**
+     * @return Product[]
+     */
+    public function products(): array
+    {
+        return $this->products;
     }
 
     public function productsCount(): int

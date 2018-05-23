@@ -24,7 +24,7 @@ class ProductAddedToBasket extends AggregateChanged
     {
         /** @var self $event */
         $event = self::occur($basketId->toString(), [
-            'product_id' => $productId,
+            'product_id' => $productId->toString(),
         ]);
 
         $event->basketId = $basketId;

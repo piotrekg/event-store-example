@@ -22,13 +22,22 @@ final class BasketReadModel extends AbstractReadModel
 
     public function init(): void
     {
-        $tableName = Table::BASKET;
+        $basketTableName = Table::BASKET;
+        $basketProductsTableName = Table::BASKET_PRODUCT;
 
         $sql = <<<EOT
-CREATE TABLE `$tableName` (
+CREATE TABLE `$basketTableName` (
   `id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `products` JSON CHECK (JSON_VALID(products)),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE `$basketProductsTableName` (
+  `basket_id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `product_id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`basket_id`, `product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 EOT;
 
         $statement = $this->connection->prepare($sql);
@@ -76,5 +85,15 @@ EOT;
     protected function insert(array $data): void
     {
         $this->connection->insert(Table::BASKET, $data);
+    }
+
+    protected function addProduct(string $basketId, string $productId): void
+    {
+        $stmt = $this->connection->prepare(sprintf('INSERT INTO %s SET basket_id = :basket_id, product_id = :product_id', Table::BASKET_PRODUCT));
+
+        $stmt->bindValue('basket_id', $basketId);
+        $stmt->bindValue('product_id', $productId);
+
+        $stmt->execute();
     }
 }

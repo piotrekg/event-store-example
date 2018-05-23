@@ -12,7 +12,7 @@ services:
             - { name: 'prooph_service_bus.basket_command_bus.route_target', message_detection: true }
 
     Domain\Basket\Handler\AddProductToBasketHandler:
-        arguments: ['@basket_collection']
+        arguments: ['@basket_collection', '@product_collection']
         public: true
         tags:
             - { name: 'prooph_service_bus.basket_command_bus.route_target', message_detection: true }

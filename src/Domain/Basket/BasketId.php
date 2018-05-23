@@ -35,6 +35,11 @@ final class BasketId implements ValueObject
         return $this->uuid->toString();
     }
 
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
+
     public function equals(ValueObject $other): bool
     {
         return get_class($this) === get_class($other)
