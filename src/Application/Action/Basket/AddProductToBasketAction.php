@@ -8,7 +8,6 @@ use Domain\Basket\Basket;
 use Domain\Basket\BasketId;
 use Domain\Basket\Command\AddProductToBasket;
 use Domain\Basket\Command\CreateNewBasket;
-use Domain\Product\Command\CreateNewProduct;
 use Domain\Product\ProductId;
 use Prooph\ServiceBus\CommandBus;
 use Symfony\Component\HttpFoundation\JsonResponse;

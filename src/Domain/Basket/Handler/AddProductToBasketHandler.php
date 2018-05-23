@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Domain\Basket\Handler;
 
-use Domain\Basket\Basket;
 use Domain\Basket\BasketRepository;
 use Domain\Basket\Command\AddProductToBasket;
-use Domain\Basket\Command\CreateNewBasket;
 use Domain\Basket\Exception\ProductAddedTwiceException;
-use Domain\Product\ProductRepository;
 
 class AddProductToBasketHandler
 {
