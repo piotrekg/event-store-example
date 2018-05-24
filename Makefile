@@ -3,6 +3,7 @@
 start: docker-down \
 	docker-up \
 	docker-composer-build \
+	docker-create-stream \
 
 stop: docker-down
 
@@ -24,5 +25,5 @@ docker-cache-clear:
 	docker-compose exec php rm -rf /var/www/html/var/cache/*
 	docker-compose exec php chmod -R 777 /var/www/html/var/cache/
 
-docker-setup-amqp:
-	docker-compose exec command /var/command/amqp-tools/vendor/bin/rabbit vhost:mapping:create /var/command/amqp-tools/config/products.yml --host=rabbitmq --password=guest
+docker-create-stream:
+	docker-compose exec php php bin/console event-store:event-stream:create

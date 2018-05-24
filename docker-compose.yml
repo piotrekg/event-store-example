@@ -10,19 +10,8 @@ services:
             - .env
         volumes:
             - ./var/maria:/var/lib/mysql
+            - ./vendor/prooph/pdo-event-store/scripts/mariadb:/docker-entrypoint-initdb.d
 
-    mongodb:
-        image: mongo
-        ports:
-            - "27017:27017"
-    rabbitmq:
-        image: rabbitmq:3-management
-        ports:
-            - "15672:15672"
-            - "5672:5672"
-            - "25672:25672"
-        env_file:
-            - .env
     php:
         build: ./config/docker/php-fpm
         expose:
@@ -30,6 +19,8 @@ services:
         env_file:
               - .env
         volumes:
+            - ./var/
+            - ./vendor/
             - ./bin:/var/www/html/bin
             - ./config:/var/www/html/config
             - ./src:/var/www/html/src
@@ -42,11 +33,9 @@ services:
             - ./Makefile:/var/www/html/Makefile
             - ./.env:/var/www/html/.env
             - ./.cache/composer:/root/.composer
-        links:
-            - rabbitmq
-            - mongodb
+
     nginx:
-        build: ./config/docker//nginx
+        build: ./config/docker/nginx
         ports:
             - "80:8181"
         links:
@@ -55,10 +44,21 @@ services:
             - php
         volumes:
             - ./var/log/:/var/log/nginx
-    elk:
-        build: ./config/docker/elk
-        ports:
-            - "5601:5601"
-            - "9201:9200"
-            - "5044:5044"
-            - "12201:12201"
+
+    projection_product:
+        image: prooph/php:7.2-cli
+        entrypoint: /app/bin/wait_for_sql.sh
+        volumes:
+          - ./:/app
+        depends_on:
+          - db
+        command: php bin/console event-store:projection:run product_projection
+
+    projection_basket:
+        image: prooph/php:7.2-cli
+        entrypoint: /app/bin/wait_for_sql.sh
+        volumes:
+          - ./:/app
+        depends_on:
+          - db
+        command: php bin/console event-store:projection:run basket_projection
