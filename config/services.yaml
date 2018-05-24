@@ -6,6 +6,10 @@ services:
         autoconfigure: true
         public: false
 
+    Doctrine\DBAL\Driver\Connection:
+        class: Doctrine\DBAL\Driver\PDOConnection
+        factory: ['@database_connection', getWrappedConnection]
+
     Application\:
         resource: '../src/Application/*'
         exclude: '../src/Application/{Action,Migrations,Tests,Kernel.php}'
@@ -29,7 +33,3 @@ services:
     Application\Action\Basket\GetBasketAction:
               arguments: ['@prooph_service_bus.basket_command_bus']
               tags: ['controller.service_arguments']
-
-    Doctrine\DBAL\Driver\Connection:
-        class: Doctrine\DBAL\Driver\PDOConnection
-        factory: ['@database_connection', getWrappedConnection]
